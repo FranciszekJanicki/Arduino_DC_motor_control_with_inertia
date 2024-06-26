@@ -1,7 +1,7 @@
 #include "DC.h"
 
 // array of macros's of led pin numbers -> see pinLibrary.h file
-const int ledPins[] = {
+int ledPins[] = {
   LED_SR, // used to sygnalize the devices power supply
   LED_DIR // used to blink when button for changing direction value
 };
@@ -11,14 +11,14 @@ const int ledPins[] = {
 
 // 1. Create an array of macros for H-bridge pins (standard notation for most full H-bridges)
 // array of macros of input pin numbers -> see pinLibrary.h file
-const int inputPins[] = {
+int inputPins[] = {
     DIR_BUTTON,
     potentiometer
 };
 size_t sizeInput = sizeof(inputPins) / sizeof(inputPins[0]);
 
 // array of macros of output pin numbers -> see pinLibrary.h file
-const int outputPins[] = {
+int outputPins[] = {
   enable, 
   input1, 
   input2
@@ -43,7 +43,6 @@ void setup() {
   motor->setResolutions(&ADCresolution, &DACresolution);
   motor->setDutyStep(&dutyStep);
   motor->setLedPin(LED_DIR);
-
 
 
   pinMode(SR_BUTTON, INPUT_PULLUP);

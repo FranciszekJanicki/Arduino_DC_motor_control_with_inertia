@@ -3,19 +3,17 @@
 
 #include "pinLibrary.h"
 #include <Arduino.h>
-#include <stddef.h>
 #include <math.h>
 
-template <class T>
-class DC {
+template <class T> class DC {
     public:
-        DC(const int outArray[], const size_t& _outSize, const int inArray[], const size_t& _inSize);
+        DC(int *outArray, const size_t &_outSize, int *inArray, const size_t &_inSize);
         ~DC();
         
         // logic setters
         void updateDirection();
         void brake();
-        void setDutyStep(const T* value);
+        void setDutyStep(const T *value);
         void checkDIR_input();
         void setupOutputPins() const;
         void setupInputPins() const;
@@ -25,23 +23,12 @@ class DC {
 
         // object setters
         void setLedPin(const int& pin);
-        void setResolutions(const T* adc, const T* dac); // assume 10-bit AD converter and 8-bit DA converter when not specified
+        void setResolutions(const T *adc, const T *dac); // assume 10-bit AD converter and 8-bit DA converter when not specified
 
         // getter
         T getDuty() const;
 
     private:
-        // array used for setting up output pins connected to H-bridge
-        size_t outSize = 0;
-        int* H_outputPins = nullptr;
-
-        // array used for setting up input pins
-        size_t inSize = 0;
-        int* arduino_inputPins = nullptr;
-
-        // number of led pin
-        int ledPin = 0;
-
         // PWM parameters
         T readingLimit = 0;
         T duty = 0;
@@ -58,7 +45,22 @@ class DC {
         bool changedDirection = false;
         bool ledState = false;
 
+        size_t outSize = 0;
+        size_t inSize = 0;
+
+        int ledPin = 0;
+
+         // pointer to dynamically allocated array used for setting up output pins
+        int *H_outputPins;
+        
+         // pointer to dynamically allocated array used for setting up input pins
+         int *arduino_inputPins;      
 };
+
+// int* ptrArray[size]; // ptr array
+// int* *ptrToFirstElement = ptrArray; // ptr to array of ptrs (to first element)
+// // OR
+// int** ptrToFirstElement = new int*[size] // ptr to dynamically allocated array of ptrs (ptr to array)
 
 bool getSR_input();
 

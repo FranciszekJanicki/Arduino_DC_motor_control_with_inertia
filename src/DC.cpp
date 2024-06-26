@@ -1,25 +1,28 @@
 #include "DC.h"
 
 template <class T>
-DC<T>::DC(const int outArray[], const size_t& _outSize, const int inArray[], const size_t& _inSize) : outSize(_outSize), inSize(_inSize) {
+DC<T>::DC(int* outArray, const size_t& _outSize, int* inArray, const size_t& _inSize) : outSize(_outSize), inSize(_inSize) {
 
     // setting up an object, nothing fancy here
-
-    H_outputPins = new int[outSize];
+    int* outPtr = outArray; // pointer to first element of outArray
+    H_outputPins = new int[outSize]; // pointer to first element of H_outputPins array
     for (size_t i = 0; i < inSize; ++i) {
-        H_outputPins[i] = outArray[i];
+        H_outputPins[i] = outPtr[i]; // equal to *(H_output_pins + i) = *(outPtr + i) as both arrays are normal integers, 
+        // its just outPtr and H_outputPins being pointers to beginning of arrays (they store addres of first element of these arrays)
     }
+    outPtr = nullptr;
+    delete outPtr;
 
     arduino_inputPins = new int[inSize];
     for (size_t i = 0; i < inSize; ++i) {
-        arduino_inputPins[i] = inArray[i];
+        arduino_inputPins[i] = inArray[i]; // equals *(inArray + i)
     }
 }
 
 template <class T>
 DC<T>::~DC() {
-    delete[] H_outputPins;
     delete[] arduino_inputPins;
+    delete[] H_outputPins;
 }
 
 template <class T>
@@ -30,9 +33,8 @@ void DC<T>::setDutyStep(const T* value) {
 // setting up output pins
 template <class T>
 void DC<T>::setupOutputPins() const {
-    size_t size = sizeof(H_outputPins) / sizeof(H_outputPins[0]);
 
-    for (size_t i = 0; i < size; ++i) {
+    for (size_t i = 0; i < outSize; ++i) {
 
         //if (H_outputPins[i] == nullptr) {
           //  char error[] = "Null pointer encountered!";
@@ -49,9 +51,8 @@ void DC<T>::setupOutputPins() const {
 // setting up input pins
 template <class T>
 void DC<T>::setupInputPins() const {
-    size_t size = sizeof(arduino_inputPins) / sizeof(arduino_inputPins[0]);
 
-    for (size_t i = 0; i < size; ++i) {
+    for (size_t i = 0; i < inSize; ++i) {
 
         //if (arduino_inputPins[i] == nullptr) {
             //char error[] = "Null pointer encountered!";
